@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 启用组件扫描，与注解 @ComponentScan 作用相同，base-package 声明了扫描的范围 -->
+    <context:component-scan base-package="com.vincent.spring.framework.example"/>
+
+    <!-- 装配简单的 JavaBean 对象 -->
+    <bean id="simpleJavaBean" class="com.vincent.spring.framework.example.SimpleJavaBean"/>
+</beans>
