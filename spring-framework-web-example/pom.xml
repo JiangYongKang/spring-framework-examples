@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>spring-framework-xml-web-example</module>
+        <module>spring-framework-annotation-web-example</module>
     </modules>
 
 
