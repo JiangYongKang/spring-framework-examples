@@ -12,6 +12,8 @@
     <modules>
         <module>spring-framework-web-example</module>
         <module>spring-framework-bean-example</module>
+        <module>spring-framework-h2-example</module>
+        <module>spring-framework-datasource-example</module>
     </modules>
 
     <dependencies>
