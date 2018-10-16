@@ -3,14 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>spring-framework-examples</artifactId>
+        <artifactId>spring-framework-resource-example</artifactId>
         <groupId>com.vincent.spring.framework.examples</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <packaging>pom</packaging>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>spring-framework-bean-example</artifactId>
+    <artifactId>spring-framework-file-system-resource-example</artifactId>
 
     <dependencies>
         <dependency>
@@ -19,4 +18,5 @@
             <version>4.3.18.RELEASE</version>
         </dependency>
     </dependencies>
+
 </project>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:content="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- 配置包扫描路径 -->
+    <content:component-scan base-package="com.vincent.spring.framework.example"/>
+
+    <!-- 通过构造函数注入对象到容器中 -->
+    <bean id="message" class="com.vincent.spring.framework.example.MessageBean">
+        <constructor-arg name="nickname" value="vincent"/>
+        <constructor-arg name="content" value="this is a test message."/>
+    </bean>
+</beans>

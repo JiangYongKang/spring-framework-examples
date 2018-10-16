@@ -12,12 +12,25 @@
     <modules>
         <module>spring-framework-web-example</module>
         <module>spring-framework-bean-example</module>
+        <module>spring-framework-aop-example</module>
         <module>spring-framework-h2-example</module>
         <module>spring-framework-datasource-example</module>
         <module>spring-framework-thymeleaf-example</module>
+        <module>spring-framework-resource-example</module>
     </modules>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>4.3.18.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
