@@ -14,9 +14,9 @@
         <module>spring-framework-bean-example</module>
         <module>spring-framework-aop-example</module>
         <module>spring-framework-h2-example</module>
-        <module>spring-framework-datasource-example</module>
         <module>spring-framework-thymeleaf-example</module>
         <module>spring-framework-resource-example</module>
+        <module>spring-framework-orm-example</module>
     </modules>
 
     <dependencies>
