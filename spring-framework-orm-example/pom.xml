@@ -15,6 +15,7 @@
     <modules>
         <module>spring-framework-datasource-example</module>
         <module>spring-framework-h2-example</module>
+        <module>spring-framework-druid-example</module>
     </modules>
 
 </project>
