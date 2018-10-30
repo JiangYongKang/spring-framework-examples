@@ -23,6 +23,7 @@
         <module>spring-framework-resource-example</module>
         <module>spring-framework-orm-example</module>
         <module>spring-framework-search-example</module>
+        <module>spring-framework-test-example</module>
     </modules>
 
     <dependencies>
