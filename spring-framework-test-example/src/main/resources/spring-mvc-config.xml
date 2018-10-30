@@ -9,4 +9,6 @@
 
     <!-- 配置包扫描路径 -->
     <content:component-scan base-package="com.vincent.spring.framework.example"/>
+
+    <import resource="classpath:datasource.xml"/>
 </beans>
