@@ -29,3 +29,9 @@ out/
 target/
 *.iml
 classes/
+
+# vscode
+.settings
+.classpath
+.project
+.factorypath

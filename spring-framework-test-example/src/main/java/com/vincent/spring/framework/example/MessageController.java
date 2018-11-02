@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessageController {
 
     @GetMapping
-    public ResponseEntity index() {
+    public ResponseEntity<?> index() {
         return ResponseEntity.ok("hello world");
     }
 }
