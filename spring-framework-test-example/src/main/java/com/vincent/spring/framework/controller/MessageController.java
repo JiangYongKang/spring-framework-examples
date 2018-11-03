@@ -2,13 +2,12 @@ package com.vincent.spring.framework.controller;
 
 import com.vincent.spring.framework.model.Message;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Author: vincent
@@ -20,11 +19,45 @@ import java.util.List;
 @RequestMapping("/messages")
 public class MessageController {
 
+    private ThreadLocal<List<Message>> messageContainer = new ThreadLocal<>();
+
+    @PostConstruct
+    public void initMessageContainer() {
+        List<Message> messages = new ArrayList<>();
+        messages.add(new Message("vincent", "this is test message"));
+        messages.add(new Message("nick", "this is test message"));
+        messageContainer.set(messages);
+    }
+
     @GetMapping
     public ResponseEntity<?> index() {
-        List<Message> messages = new ArrayList<>();
-        messages.add(new Message("vincent", "hello", new Date()));
-        messages.add(new Message("vincent", "world", new Date()));
-        return ResponseEntity.ok(messages);
+        return ResponseEntity.ok(messageContainer.get());
+    }
+
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody Message message) {
+        messageContainer.get().add(message);
+        return ResponseEntity.ok(message);
+    }
+
+    @PutMapping("/{uuid}")
+    public ResponseEntity<?> update(@PathVariable String uuid, @RequestBody Message message) {
+        messageContainer.get().forEach(expiredMessage -> {
+            if (expiredMessage.getUuid().equals(uuid)) {
+                expiredMessage.setNickname(message.getNickname());
+                expiredMessage.setContent(message.getContent());
+                expiredMessage.setCreateTime(message.getCreateTime());
+            }
+        });
+        return ResponseEntity.ok(message);
+    }
+
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<?> delete(@PathVariable String uuid) {
+        List<Message> messages = messageContainer.get();
+        List<Message> afterMessages = messages.stream().filter(message -> !message.getUuid().equals(uuid))
+                .collect(Collectors.toList());
+        messageContainer.set(afterMessages);
+        return ResponseEntity.ok("{\"uuid\":" + uuid + " }");
     }
 }
