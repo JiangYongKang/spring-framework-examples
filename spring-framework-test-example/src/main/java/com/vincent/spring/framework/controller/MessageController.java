@@ -46,7 +46,7 @@ public class MessageController {
             if (expiredMessage.getUuid().equals(uuid)) {
                 expiredMessage.setNickname(message.getNickname());
                 expiredMessage.setContent(message.getContent());
-                expiredMessage.setCreateTime(message.getCreateTime());
+                expiredMessage.setCreatedTime(message.getCreatedTime());
             }
         });
         return ResponseEntity.ok(message);

@@ -13,12 +13,13 @@ public class Message {
     private String uuid;
     private String nickname;
     private String content;
-    private Date createTime;
+    private Date createdTime;
+    private Date updatedTime;
 
     public Message(String nickname, String content) {
         this.uuid = UUID.randomUUID().toString().replace("-", "");
         this.nickname = nickname;
         this.content = content;
-        this.createTime = new Date();
+        this.createdTime = new Date();
     }
 }
