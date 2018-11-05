@@ -1,6 +1,7 @@
 package com.vincent.spring.framework.example.test;
 
 import com.vincent.spring.framework.model.Message;
+import com.vincent.spring.framework.service.MessageService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.util.List;
+
+import static com.vincent.spring.framework.service.MessageService.buildMessage;
 
 /**
  * Author: vincent
@@ -34,15 +37,7 @@ public class SQLScriptTests {
 
     @Test
     public void seedTest() {
-        List<Message> messages = template.query("select * from message", (resultSet, i) -> {
-            Message message = new Message();
-            message.setUuid(resultSet.getString("id"));
-            message.setNickname(resultSet.getString("nickname"));
-            message.setContent(resultSet.getString("content"));
-            message.setCreatedTime(resultSet.getDate("created_time"));
-            message.setUpdatedTime(resultSet.getDate("updated_time"));
-            return message;
-        });
+        List<Message> messages = template.query("select * from message", (resultSet, i) -> buildMessage(resultSet));
         Assert.assertNotNull(messages);
         Assert.assertEquals(messages.size(), 2);
     }

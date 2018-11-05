@@ -1,20 +1,25 @@
 package com.vincent.spring.framework.example.test;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vincent.spring.framework.controller.MessageController;
 import com.vincent.spring.framework.model.Message;
+import com.vincent.spring.framework.service.MessageService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -38,10 +43,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @RunWith(SpringRunner.class)
 @ContextConfiguration("classpath:spring-mvc-config.xml")
+@Sql("classpath:db-schema-test.sql")
 public class MessageControllerTests {
 
     @Resource
     private WebApplicationContext webApplicationContext;
+
+    @Resource
+    private MessageService messageService;
 
     private MockMvc mockMvc;
 
@@ -56,6 +65,8 @@ public class MessageControllerTests {
 //                .alwaysExpect(status().isOk())
 //                .alwaysExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 //                .build();
+        messageService.create(new Message("vincent", "this is test message"));
+        messageService.create(new Message("alice", "this is test message"));
     }
 
     @Test
@@ -64,7 +75,7 @@ public class MessageControllerTests {
                 .andDo(print())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].nickname", is("vincent")))
-                .andExpect(jsonPath("$[1].nickname", is("nick")))
+                .andExpect(jsonPath("$[1].nickname", is("alice")))
                 .andExpect(jsonPath("$[0].content", is("this is test message")))
                 .andExpect(jsonPath("$[1].content", is("this is test message")));
     }
@@ -92,9 +103,9 @@ public class MessageControllerTests {
 
     @Test
     public void deleteTest() throws Exception {
-        String uuid = UUID.randomUUID().toString().replace("-", "");
-        this.mockMvc.perform(delete("/messages/" + uuid).accept(MediaType.APPLICATION_JSON_UTF8).contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andDo(print())
-                .andExpect(jsonPath("$.uuid", is(uuid)));
+        MvcResult result = this.mockMvc.perform(get("/messages").contentType(MediaType.APPLICATION_JSON_UTF8)).andReturn();
+        List<Message> messages = new ObjectMapper().readValue(result.getResponse().getContentAsString(), new TypeReference<List<Message>>(){});
+        this.mockMvc.perform(delete("/messages/" + messages.get(0).getUuid()).accept(MediaType.APPLICATION_JSON_UTF8).contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andDo(print());
     }
 }
