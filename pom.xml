@@ -24,6 +24,7 @@
         <module>spring-framework-orm-example</module>
         <module>spring-framework-search-example</module>
         <module>spring-framework-test-example</module>
+        <module>spring-framework-schedule-example</module>
     </modules>
 
     <dependencies>
