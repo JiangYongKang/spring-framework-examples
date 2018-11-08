@@ -1,7 +1,7 @@
 package com.vincent.spring.framework.example;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.quartz.JobExecutionContext;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.util.Date;
 
@@ -11,14 +11,10 @@ import java.util.Date;
  * Comment:
  */
 
-public class TestQuartzJob {
+public class TestQuartzJob extends QuartzJobBean {
 
-    public void run() {
+    @Override
+    protected void executeInternal(JobExecutionContext context) {
         System.out.println("Hello Quartz " + new Date());
     }
-
-    public static void main(String[] args) {
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-content.xml");
-    }
-
 }

@@ -3,16 +3,15 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="testQuartzJob" class="com.vincent.spring.framework.example.TestQuartzJob"/>
-
-    <bean id="cronTriggerFactoryBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="methodInvokingJobDetailFactoryBean"/>
-        <property name="cronExpression" value="*/2 * * * * ?"/>
+    <!-- 需要执行的任务类 -->
+    <bean id="testQuartzJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.vincent.spring.framework.example.TestQuartzJob"/>
     </bean>
 
-    <bean id="methodInvokingJobDetailFactoryBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="testQuartzJob"/>
-        <property name="targetMethod" value="run"/>
+    <!-- 调度使用的触发器 -->
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="testQuartzJob"/>
+        <property name="cronExpression" value="0/5 * * * * ?"/>
     </bean>
 
 </beans>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:content="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       xmlns:content="http://www.springframework.org/schema/context" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
     <!-- 加载数据源配置文件 -->
     <content:property-placeholder location="classpath:datasource.properties"/>
@@ -13,20 +13,25 @@
         <property name="url" value="${datasource.url}"/>
         <property name="username" value="${datasource.username}"/>
         <property name="password" value="${datasource.password}"/>
-        <!--<property name="schema" value="${datasource.schema}"/>-->
     </bean>
 
+    <!-- 初始化数据库 -->
+    <jdbc:initialize-database>
+        <jdbc:script location="classpath:schema/tables_h2.sql"/>
+    </jdbc:initialize-database>
+
+    <!-- 使用数据库的方式配置调度器 -->
     <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="configLocation" value="classpath:quartz-scheduler.properties"/>
         <property name="overwriteExistingJobs" value="false"/>
         <property name="startupDelay" value="1"/>
-        <!--<property name="triggers">-->
-            <!--<list>-->
-                <!--<ref bean="cronTriggerFactoryBean"/>-->
-            <!--</list>-->
-        <!--</property>-->
+        <property name="triggers">
+            <list>
+                <ref bean="cronTrigger"/>
+            </list>
+        </property>
     </bean>
 
-    <!--<import resource="classpath:quartz-scheduler.xml"/>-->
+    <import resource="classpath:quartz-scheduler.xml"/>
 </beans>
