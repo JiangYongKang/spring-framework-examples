@@ -7,7 +7,7 @@
 
 # 项目清单
 - [ ] [spring-framework-aop-example](https://github.com/JiangYongKang/spring-framework-examples/tree/master/spring-framework-aop-example)
-- [ ] [spring-framework-bean-example](https://github.com/JiangYongKang/spring-framework-examples/tree/master/spring-framework-bean-example)
+- [x] [Spring Bean 装配和依赖注入](https://github.com/JiangYongKang/spring-framework-examples/tree/master/spring-framework-bean-example)
 - [ ] [spring-framework-orm-example](https://github.com/JiangYongKang/spring-framework-examples/tree/master/spring-framework-orm-example)
   - [ ] [spring-framework-datasource-example](https://github.com/JiangYongKang/spring-framework-examples/tree/master/spring-framework-orm-example/spring-framework-datasource-example)
   - [ ] [spring-framework-druid-example](https://github.com/JiangYongKang/spring-framework-examples/tree/master/spring-framework-orm-example/spring-framework-druid-example)
