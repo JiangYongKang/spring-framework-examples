@@ -20,7 +20,7 @@ public class MessageController {
     @GetMapping
     public ModelAndView index(ModelAndView modelAndView) {
         modelAndView.addObject("uuid", UUID.randomUUID().toString().replace("-", ""));
-        modelAndView.setViewName("message/index");
+        modelAndView.setViewName("/message/index");
         return modelAndView;
     }
 
