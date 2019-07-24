@@ -13,6 +13,8 @@
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <spring-framework-version>4.3.18.RELEASE</spring-framework-version>
+        <spring-data-redis-version>1.8.13.RELEASE</spring-data-redis-version>
     </properties>
 
     <modules>
@@ -25,13 +27,15 @@
         <module>spring-framework-search-example</module>
         <module>spring-framework-test-example</module>
         <module>spring-framework-schedule-example</module>
+        <module>spring-framework-cache-example</module>
+        <module>spring-framework-mq-example</module>
     </modules>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>4.3.18.RELEASE</version>
+            <version>${spring-framework-version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -44,6 +48,11 @@
             <artifactId>lombok</artifactId>
             <version>1.18.2</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.26</version>
         </dependency>
     </dependencies>
 

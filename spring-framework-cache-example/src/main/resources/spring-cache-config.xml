@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/cache
+       http://www.springframework.org/schema/cache/spring-cache.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- 如果不是使用声明式注解，需要配置AOP才能定位到需要缓存的方法 -->
+    <aop:config>
+        <aop:advisor advice-ref="cacheAdvice"
+                     pointcut="execution(* com.vincent.spring.framework.example.ArticleService.*(..))"/>
+    </aop:config>
+
+    <!-- Spring 默认的 CacheManage 是将对象缓存至内存中，内部实现是利用了 ConcurrentHashMap。在真实场景中，还是利用 Redis 进行缓存比较好一点。 -->
+    <bean id="redisCacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+        <constructor-arg ref="redisTemplate"/>
+    </bean>
+
+    <bean id="simpleKeyGenerator" class="org.springframework.cache.interceptor.SimpleKeyGenerator"/>
+
+    <cache:advice id="cacheAdvice" cache-manager="redisCacheManager" key-generator="simpleKeyGenerator">
+        <cache:caching cache="articles">
+            <cache:cache-evict method="save"/>
+            <cache:cacheable method="list"/>
+        </cache:caching>
+    </cache:advice>
+</beans>

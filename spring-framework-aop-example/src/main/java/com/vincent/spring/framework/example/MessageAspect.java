@@ -1,17 +1,20 @@
 package com.vincent.spring.framework.example;
 
+import lombok.extern.java.Log;
+
 /**
  * Author: vincent
  * Date: 2018-10-16 09:40:00
  * Comment:
  */
 
+@Log
 public class MessageAspect {
     public void beforeAction() {
-        System.out.println("before action");
+        log.info("before action");
     }
 
     public void afterAction() {
-        System.out.println("after action");
+        log.info("after action");
     }
 }

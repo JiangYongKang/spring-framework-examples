@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 配置 Redis 数据源 -->
+    <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="hostName" value="localhost"/>
+        <property name="port" value="6379"/>
+        <property name="database" value="0"/>
+        <property name="password" value=""/>
+    </bean>
+
+    <!-- 设置 Redis 序列化的格式 -->
+    <bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+    <bean id="genericJackson2JsonRedisSerializer"
+          class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer"/>
+
+    <!-- 设置 Redis 序列化的格式 -->
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="keySerializer" ref="stringRedisSerializer"/>
+        <property name="hashKeySerializer" ref="stringRedisSerializer"/>
+        <property name="valueSerializer" ref="genericJackson2JsonRedisSerializer"/>
+        <property name="hashValueSerializer" ref="genericJackson2JsonRedisSerializer"/>
+    </bean>
+
+</beans>
