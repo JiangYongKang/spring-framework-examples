@@ -1,122 +1,28 @@
-# spring-framework-test-example
-如果通过启动服务器，基于 Http 请求进行测试，这样会使得测试变得很麻烦，比如，启动速度慢，测试验证不方便，依赖网络环境等，这样会导致测试无法进行，
-为了可以对 AOI 进行测试，可以通过引入 Spring-Test 进行解决。Spring-Test 模块构建在一个 Servlet API 模拟对象上，使用 DispatcherServlet 提供完整的 SpringMVC 运行时，
-并不会使用正在运行的 Servlet 容器。通过 @ContextConfiguration 注解加载 SpringMVC 配置，该框架加载 Spring 配置并将 WebApplicationContext 注入测试以用于构建 MockMvc 实例。
-```java
-@WebAppConfiguration
-@RunWith(SpringRunner.class)
-@ContextConfiguration("classpath:spring-mvc-config.xml")
-public class MessageControllerTests {
-    @Resource
-    private WebApplicationContext webApplicationContext;
+# 一、这个示例做什么
 
-    private MockMvc mockMvc;
+这个目录用内存 H2 支撑一套留言接口，再用 MockMvc 发请求。打包方式是 war。
 
-    @Before
-    public void setup() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
-    }
-}
-```
-可以为所有的测试设置通用的 Accept 和响应头，避免在每个接口的测试中都重复编写。
-```java
-this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext)
-.defaultRequest(get("/").accept(MediaType.APPLICATION_JSON_UTF8))
-.alwaysExpect(status().isOk())
-.alwaysExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-.build()
-```
-MockMvc实例可以执行任何Http请求，并提供了丰富的方法。为了快速编写，需要静态导入一些包，如：
-```java
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-```
-```java
-mockMvc.perform(get("/messages").contentType(MediaType.APPLICATION_JSON_UTF8))
-```
-携带参数的 Get 请求
-```java
-mockMvc.perform(get("/messages/{id}", 100).contentType(MediaType.APPLICATION_JSON_UTF8))
-mockMvc.perform(get("/messages?id={id}", 100).contentType(MediaType.APPLICATION_JSON_UTF8))
-```
-Post 请求
-```java
-String requestBody = "{ \"nickname\": \"vincent\", \"content\": \"hello world\" }";
-mockMvc.perform(
-        post("/messages").contentType(MediaType.APPLICATION_JSON_UTF8)
-        .content(requestBody)
-    )
-```
-添加请求头
-```java
-mockMvc.perform(
-        get("/messages").contentType(MediaType.APPLICATION_JSON_UTF8)
-        .header(HttpHeaders.AUTHORIZATION, "425a00d6682b43c590ab24af05674c58")
-    )
-```
-打印请求日志
-```java
-mockMvc.perform(get("/messages").contentType(MediaType.APPLICATION_JSON_UTF8))
-    .andDo(print())
-```
-获取接口返回的响应结果
-```java
-String responseBody = mockMvc.perform(get("/messages").contentType(MediaType.APPLICATION_JSON_UTF8))
-    .andReturn()
-    .getResponse()
-    .getContentAsString()
-```
-对返回的状态码进行断言
-```java
-mockMvc.perform(get("/messages").contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk())
-                
-mockMvc.perform(post("/messages").contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isBadRequest())
-```
-使用 JSONPATH 对返回的内容进行断言。JSONPATH 是一个从 JSON 中抽取指定信息的工具类库，提供了多个语言的版本，不仅限于 Java。JSONPATH 对于 JSON 来讲，
-相当于 XPATH 对于 XML，其语法也有相同之处。总体来讲，JSONPATH 可以简单快速获取 JSON 中任意层级中的属性值，也可以通过复合的查询条件来查询匹配的元素。
-添加 JSONPATH 的依赖
-```xml
-<!-- JSONPAHT -->
-<dependency>
-    <groupId>com.jayway.jsonpath</groupId>
-    <artifactId>json-path</artifactId>
-    <version>2.4.0</version>
-</dependency>
-<!-- JSONPAHT 断言工具类 -->
-<dependency>
-    <groupId>com.jayway.jsonpath</groupId>
-    <artifactId>json-path-assert</artifactId>
-    <version>0.8.1</version>
-    <scope>test</scope>
-</dependency>
-```
-使用 JSONPATH 进行属性查询并断言
-```java
-mockMvc.perform(get("/messages").contentType(MediaType.APPLICATION_JSON_UTF8))
-    .andExpect(jsonPath("$", hasSize(2)))
-    .andExpect(jsonPath("$[0].nickname", is("vincent")))
-    .andExpect(jsonPath("$[1].nickname", is("alice")))
-    .andExpect(jsonPath("$[0].content", is("this is test message")))
-    .andExpect(jsonPath("$[1].content", is("this is test message")))
-    
-// 预期返回的结果如下：
-[
-  { 
-    uuid: '90dfe469500a4bc7825a0ff9fd196255', 
-    nickname: 'vincent', 
-    content: 'this is test message', 
-    createdTime: '2018-11-04 00:01:49', 
-    updatedTime: '2018-11-04 00:01:49',
-  },
-  { 
-    uuid: '425a00d6682b43c590ab24af05674c58', 
-    nickname: 'alice', 
-    content: 'this is test message', 
-    createdTime: '2018-11-04 00:01:49', 
-    updatedTime: '2018-11-04 00:01:49',
-  }
-]
-```
+依赖是 spring-webmvc、spring-orm 4.3.18.RELEASE、servlet-api 3.1.0、H2 1.4.197、json-path 2.4.0、json-path-assert 0.8.1，以及 jackson-databind 2.9.7。
+
+# 二、接口和数据
+
+`web.xml` 让 `DispatcherServlet` 读取 `classpath:spring-mvc-config.xml`。Servlet 和字符编码过滤器都映射到 `/`。MVC 配置扫描 `com.vincent.spring.framework`，并导入 `datasource.xml`。
+
+数据源是 `jdbc:h2:mem:test`，模式 MySQL，用户 `sa`，密码为空。同一份配置创建 `JdbcTemplate` 和 `DataSourceTransactionManager`。
+
+`MessageController` 映射在 `/messages`。
+
+1. `GET /messages` 执行 `select * from message`，返回列表。
+2. `POST /messages` 读取请求体里的 `Message`，插入 `id`、`nickname`、`content`、`created_time`、`updated_time`，再把这个对象返回。
+3. `PUT /messages/{uuid}` 把路径里的 uuid 写回对象，再按主键更新。更新语句的占位符顺序是昵称、内容、更新时间、主键，传入的实参依次是昵称、创建时间、更新时间、uuid。
+4. `DELETE /messages/{uuid}` 执行 `delete from message where id = ?`，响应体是这个 uuid。
+5. 四个方法都返回 HTTP 200。`Message` 的构造方法会生成去掉横线的 uuid，并设置创建时间，更新时间留空。
+
+建表脚本 `db-schema-test.sql` 创建 `message` 表，主键是 varchar。种子脚本 `db-seed-test.sql` 插入两条记录，昵称都是 `vincent`。
+
+# 三、测试分别覆盖什么
+
+1. `DataSourceTests` 加载 MVC 配置，只断言 `DataSource` 不为空。
+2. `SQLScriptTests` 用 `@Sql` 连续执行建表脚本和种子脚本，再查询 `message`，断言有 2 条记录。
+3. `MessageControllerTests` 标了 `@WebAppConfiguration`。它先执行建表脚本，每个用例前再插入昵称为 `vincent` 和 `alice` 的两条留言。MockMvc 固定期望状态码 200 和 JSON 响应。列表用例用 JsonPath 检查条数、昵称和内容，创建、更新、删除各发一次请求。
+4. `TransactionTests` 在类上标了 `@Transactional`。事务开始前和结束后各有一个方法打印文字。一个用例标了 `@Commit`，另一个标了 `@Rollback`，方法体没有修改数据。
